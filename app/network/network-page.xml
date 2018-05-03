@@ -1,0 +1,21 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page">
+    <Page.actionBar>
+        <ActionBar title="Network Requests" icon="" class="action-bar">
+        </ActionBar>
+    </Page.actionBar>
+
+    <StackLayout class="p-20">
+        <Label text="Open the Network panel in Chrome DevTools to inspect the results of the calls" textWrap="true" />
+
+        <Button text="TAP - simple GET request without body" tap="{{ getNoBody }}" />
+        <Button text="TAP - GET request with body" tap="{{ getWithBody }}"  />
+        <Button text="TAP - POST request with headers" tap="{{ postHeaders }}"  />
+        <Button text="TAP - GET request to unauthorized page" tap="{{ getUnauthorized }}"  />
+        <Button text="TAP - GET with expected delayed response" tap="{{ getDelayed }}"  />
+        <Button text="TAP - GET request with expected image response" tap="{{ getImage }}"  />
+        <Image src="{{ imageSource }}" stretch="none" />
+        
+        <Button text="TAP - GET binary data (files download)" tap="{{ getBinaryData }}"  />
+        
+    </StackLayout>
+</Page>
