@@ -7,15 +7,14 @@
     <StackLayout class="p-20">
         <Label text="Open the Network panel in Chrome DevTools to inspect the results of the calls" textWrap="true" />
 
-        <Button text="TAP - simple GET request without body" tap="{{ getNoBody }}" />
-        <Button text="TAP - GET request with body" tap="{{ getWithBody }}"  />
-        <Button text="TAP - POST request with headers" tap="{{ postHeaders }}"  />
-        <Button text="TAP - GET request to unauthorized page" tap="{{ getUnauthorized }}"  />
-        <Button text="TAP - GET with expected delayed response" tap="{{ getDelayed }}"  />
-        <Button text="TAP - GET request with expected image response" tap="{{ getImage }}"  />
+        <Button text="GET without body" tap="{{ getNoBody }}" />
+        <Button text="GET with body" tap="{{ getWithBody }}"  />
+        <Button text="GET with unauthorized" tap="{{ getUnauthorized }}"  />
+        <Button text="GET with delayed response" tap="{{ getDelayed }}"  />
+        <Button text="GET with image response" tap="{{ getImage }}"  />
+        <Button text="GET binary data (download)" tap="{{ getBinaryData }}"  />
+        <Button text="POST with headers" tap="{{ postHeaders }}"  />
         <Image src="{{ imageSource }}" stretch="none" />
-        
-        <Button text="TAP - GET binary data (files download)" tap="{{ getBinaryData }}"  />
         
     </StackLayout>
 </Page>
