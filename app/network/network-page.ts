@@ -43,7 +43,6 @@ export function navigatingTo(args: EventData) {
             http.request(requestOptions).then((res) => {
                 if (res.statusCode >= 200 && res.statusCode < 400) {
                     let jsonRes = res.content.toJSON();
-
                     console.log(jsonRes);
                 } else {
                     alert("Failed fetching response. Code: " + res.statusCode);
@@ -71,7 +70,6 @@ export function navigatingTo(args: EventData) {
             http.request(requestOptions).then((res) => {
                 if (res.statusCode >= 200 && res.statusCode < 400) {
                     let jsonRes = res.content.toJSON();
-
                     console.log(jsonRes);
                 } else {
                     alert("Failed fetching response. Code: " + res.statusCode);
@@ -120,7 +118,6 @@ export function navigatingTo(args: EventData) {
             http.request(requestOptions).then((res) => {
                 if (res.statusCode >= 200 && res.statusCode < 400) {
                     let jsonRes = res.content.raw;
-
                     console.log(jsonRes);
                 } else {
                     alert("Failed fetching response. Code: " + res.statusCode);
