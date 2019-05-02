@@ -1,9 +1,9 @@
-import { Observable } from 'data/observable';
-import * as frame from "ui/frame";
-import { StackLayout } from "ui/layouts/stack-layout";
-import { FlexboxLayout } from "ui/layouts/flexbox-layout";
-import { Label } from "ui/label";
-import { Color } from "color";
+import { Observable } from 'tns-core-modules/data/observable';
+import * as frame from "tns-core-modules/ui/frame";
+import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout";
+import { FlexboxLayout } from "tns-core-modules/ui/layouts/flexbox-layout";
+import { Label } from "tns-core-modules/ui/label";
+import { Color } from "tns-core-modules/color";
 
 const possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

@@ -12,10 +12,6 @@
         ],
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "./node_modules/tns-core-modules/*",
-                "./node_modules/*"
-            ],
             "~/*": [
                 "app/*"
             ]
@@ -23,7 +19,6 @@
     },
     "exclude": [
         "node_modules",
-        "platforms",
-        "**/*.aot.ts"
+        "platforms"
     ]
 }

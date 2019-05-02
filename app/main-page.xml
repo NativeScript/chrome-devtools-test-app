@@ -25,11 +25,11 @@ https://docs.nativescript.org/ui/components.
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        <Button text="TAP - verify distinct console logs" tap="{{ tapLogs }}" />
-        <Button text="TAP - navigate to Network requests page" tap="{{ navigateToNetworkPage }}" />
-        <Button text="TAP - add view children" tap="{{ addViews }}" />
-        <Button text="TAP - remove random view child" tap="{{ removeView }}" />
-        <ScrollView>
+        <Button text="TAP - Console logs" tap="{{ tapLogs }}" />
+        <Button text="TAP - Network requests" tap="{{ navigateToNetworkPage }}" />
+        <Button text="TAP - Add view children" tap="{{ addViews }}" />
+        <Button text="TAP - Remove random view child" tap="{{ removeView }}" />
+        <ScrollView height="200">
             <FlexboxLayout flexDirection="column" id="flexboxContainer" >
             </FlexboxLayout>
         </ScrollView>
