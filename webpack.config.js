@@ -5,13 +5,14 @@ const nsWebpack = require("nativescript-dev-webpack");
 const nativescriptTarget = require("nativescript-dev-webpack/nativescript-target");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeScriptWorkerPlugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const hashSalt = Date.now().toString();
 
 module.exports = env => {
-    // Add your custom Activities, Services and other android app components here.
+    // Add your custom Activities, Services and other Android app components here.
     const appComponents = [
         "tns-core-modules/ui/frame",
         "tns-core-modules/ui/frame/activity",
@@ -46,15 +47,18 @@ module.exports = env => {
         unitTesting, // --env.unitTesting,
         verbose, // --env.verbose
     } = env;
-
     const isAnySourceMapEnabled = !!sourceMap || !!hiddenSourceMap;
     const externals = nsWebpack.getConvertedExternals(env.externals);
+
     const appFullPath = resolve(projectRoot, appPath);
     const appResourcesFullPath = resolve(projectRoot, appResourcesPath);
 
     const entryModule = nsWebpack.getEntryModule(appFullPath, platform);
-    const entryPath = `.${sep}${entryModule}.js`;
+    const entryPath = `.${sep}${entryModule}.ts`;
     const entries = { bundle: entryPath };
+
+    const tsConfigPath = resolve(projectRoot, "tsconfig.tns.json");
+
     const areCoreModulesExternal = Array.isArray(env.externals) && env.externals.some(e => e.indexOf("tns-core-modules") > -1);
     if (platform === "ios" && !areCoreModulesExternal) {
         entries["tns_modules/tns-core-modules/inspector_modules"] = "inspector_modules";
@@ -67,7 +71,6 @@ module.exports = env => {
         itemsToClean.push(`${join(projectRoot, "platforms", "android", "app", "src", "main", "assets", "snapshots")}`);
         itemsToClean.push(`${join(projectRoot, "platforms", "android", "app", "build", "configurations", "nativescript-android-snapshot")}`);
     }
-
 
     nsWebpack.processAppComponents(appComponents, platform);
     const config = {
@@ -93,16 +96,18 @@ module.exports = env => {
             hashSalt
         },
         resolve: {
-            extensions: [".js", ".scss", ".css"],
+            extensions: [".ts", ".js", ".scss", ".css"],
             // Resolve {N} system modules from tns-core-modules
             modules: [
+                resolve(__dirname, "node_modules/tns-core-modules"),
+                resolve(__dirname, "node_modules"),
                 "node_modules/tns-core-modules",
                 "node_modules",
             ],
             alias: {
                 '~': appFullPath
             },
-            // don't resolve symlinks to symlinked modules
+            // resolve symlinks to symlinked modules
             symlinks: true
         },
         resolveLoader: {
@@ -179,9 +184,9 @@ module.exports = env => {
                         },
                     ].filter(loader => !!loader)
                 },
-
+                
                 {
-                    test: /\.(js|css|scss|html|xml)$/,
+                    test: /\.(ts|css|scss|html|xml)$/,
                     use: "nativescript-dev-webpack/hmr/hot-loader"
                 },
 
@@ -198,6 +203,24 @@ module.exports = env => {
                         { loader: "css-loader", options: { url: false } },
                         "sass-loader"
                     ]
+                },
+
+                {
+                    test: /\.ts$/,
+                    use: {
+                        loader: "ts-loader",
+                        options: {
+                            configFile: tsConfigPath,
+                            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#faster-builds
+                            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#hot-module-replacement
+                            transpileOnly: true,
+                            allowTsInNodeModules: true,
+                            compilerOptions: {
+                                sourceMap: isAnySourceMapEnabled,
+                                declaration: false
+                            }
+                        },
+                    }
                 },
             ]
         },
@@ -216,7 +239,6 @@ module.exports = env => {
                 { from: { glob: "**/*.png" } },
             ], { ignore: [`${relative(appPath, appResourcesFullPath)}/**`] }),
             new nsWebpack.GenerateNativeScriptEntryPointsPlugin("bundle"),
-
             // For instructions on how to set up workers with webpack
             // check out https://github.com/nativescript/worker-loader
             new NativeScriptWorkerPlugin(),
@@ -225,7 +247,15 @@ module.exports = env => {
                 platforms,
             }),
             // Does IPC communication with the {N} CLI to notify events when running in watch mode.
-            new nsWebpack.WatchStateLoggerPlugin()
+            new nsWebpack.WatchStateLoggerPlugin(),
+            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#faster-builds
+            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#hot-module-replacement
+            new ForkTsCheckerWebpackPlugin({
+                tsconfig: tsConfigPath,
+                async: false,
+                useTypescriptIncrementalApi: true,
+                memoryLimit: 4096
+            })
         ],
     };
 
